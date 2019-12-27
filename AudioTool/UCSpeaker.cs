@@ -50,7 +50,7 @@ namespace AudioTool
                 {
                     if (defaultDevice != null)
                     {
-                        speakerValue = (int)(defaultDevice.AudioMeterInformation.MasterPeakValue * 100);
+                        speakerValue = (defaultDevice.AudioMeterInformation.MasterPeakValue * 100);
                         defaultDevice.Dispose();
                         CreateImage();
                         Application.DoEvents();

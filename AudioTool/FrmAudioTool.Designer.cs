@@ -53,6 +53,7 @@
             // 
             this.ucSpeaker1.BackColor = System.Drawing.Color.Black;
             this.ucSpeaker1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ucSpeaker1.ForeColor = System.Drawing.Color.LimeGreen;
             this.ucSpeaker1.Location = new System.Drawing.Point(79, 12);
             this.ucSpeaker1.Name = "ucSpeaker1";
             this.ucSpeaker1.Size = new System.Drawing.Size(50, 300);
@@ -104,6 +105,7 @@
             this.Name = "FrmAudioTool";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Audio Tool";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.FrmAudioTool_Load);
             this.ResumeLayout(false);
 
