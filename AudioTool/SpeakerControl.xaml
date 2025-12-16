@@ -1,0 +1,42 @@
+<UserControl x:Class="AudioTool.SpeakerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="50"
+             Background="Transparent">
+    <UserControl.Resources>
+        <Storyboard x:Key="PulseAnimation" RepeatBehavior="Forever">
+            <DoubleAnimation Storyboard.TargetName="VolumeBar"
+                           Storyboard.TargetProperty="Opacity"
+                           From="0.9" To="0.6" Duration="0:0:0.5"
+                           AutoReverse="True"/>
+        </Storyboard>
+    </UserControl.Resources>
+    <Grid>
+        <Border BorderBrush="#FF404040" BorderThickness="1" CornerRadius="4" Background="#FF0A0A0A">
+            <Grid>
+                <Rectangle x:Name="VolumeBar" 
+                          VerticalAlignment="Bottom" 
+                          HorizontalAlignment="Stretch"
+                          Opacity="0.9"
+                          RadiusX="4"
+                          RadiusY="4"
+                          StrokeThickness="0"/>
+                <TextBlock x:Name="ValueText" 
+                          Text="0.00" 
+                          Foreground="#FF32CD32" 
+                          HorizontalAlignment="Center" 
+                          VerticalAlignment="Center"
+                          FontSize="11"
+                          FontWeight="SemiBold">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="#FF000000" BlurRadius="3" ShadowDepth="1" Opacity="0.8"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
+
