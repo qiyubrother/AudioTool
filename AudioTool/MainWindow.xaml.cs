@@ -71,9 +71,14 @@ namespace AudioTool
             UpdateOpacityMenuItems();
         }
 
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            UpdateOpacityMenuItemsInContextMenu(sender as ContextMenu);
+        }
+
         private void UpdateOpacityMenuItems()
         {
-            // 清除所有选中状态
+            // 更新主菜单
             Opacity10.IsChecked = false;
             Opacity20.IsChecked = false;
             Opacity30.IsChecked = false;
@@ -97,6 +102,38 @@ namespace AudioTool
             else if (Math.Abs(currentOpacity - 0.8) < 0.01) Opacity80.IsChecked = true;
             else if (Math.Abs(currentOpacity - 0.9) < 0.01) Opacity90.IsChecked = true;
             else if (Math.Abs(currentOpacity - 1.0) < 0.01) Opacity100.IsChecked = true;
+
+            // 更新其他ContextMenu
+            UpdateOpacityMenuItemsInContextMenu(MicrophoneControl.ContextMenu);
+            UpdateOpacityMenuItemsInContextMenu(SpeakerControl.ContextMenu);
+        }
+
+        private void UpdateOpacityMenuItemsInContextMenu(ContextMenu contextMenu)
+        {
+            if (contextMenu == null) return;
+
+            double currentOpacity = Opacity;
+            
+            // 遍历ContextMenu的所有项，找到"不透明度"菜单项
+            foreach (var item in contextMenu.Items)
+            {
+                if (item is MenuItem parentMenuItem && parentMenuItem.Header?.ToString() == "不透明度")
+                {
+                    // 清除所有子菜单项的选中状态
+                    foreach (MenuItem childItem in parentMenuItem.Items)
+                    {
+                        if (childItem.IsCheckable && childItem.Tag is string tagValue)
+                        {
+                            childItem.IsChecked = false;
+                            if (double.TryParse(tagValue, out double opacity) && Math.Abs(currentOpacity - opacity) < 0.01)
+                            {
+                                childItem.IsChecked = true;
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
         }
 
         private void OpacityMenuItem_Click(object sender, RoutedEventArgs e)
@@ -149,12 +186,10 @@ namespace AudioTool
             }
         }
 
-        private void Grid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Window_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
-            {
-                DragMove();
-            }
+            // 允许在整个窗口上拖动
+            DragMove();
         }
     }
 }

@@ -7,15 +7,16 @@
         mc:Ignorable="d"
         Title="Audio Tool" 
         Height="340" 
-        Width="160"
+        Width="130"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Topmost="True"
         WindowStyle="None"
-        Background="#FF1A1A1A"
-        AllowsTransparency="False"
+        Background="Transparent"
+        AllowsTransparency="True"
         Loaded="Window_Loaded"
-        Closing="Window_Closing">
+        Closing="Window_Closing"
+        PreviewMouseLeftButtonDown="Window_PreviewMouseLeftButtonDown">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Background" Value="#FF2D2D2D"/>
@@ -43,20 +44,21 @@
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
         <Style TargetType="ContextMenu">
-            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="Background" Value="#FF1A1A1A"/>
             <Setter Property="BorderBrush" Value="#FF404040"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="2"/>
         </Style>
         <Style TargetType="MenuItem">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#FFFFFFFF"/>
+            <Setter Property="Background" Value="#FF1A1A1A"/>
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
             <Setter Property="Padding" Value="20,10"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#FF3D3D3D"/>
+                    <Setter Property="Foreground" Value="#FFFFFFFF"/>
                 </Trigger>
                 <Trigger Property="IsChecked" Value="True">
                     <Setter Property="Background" Value="#FF4A4A4A"/>
@@ -83,33 +85,65 @@
             <MenuItem Header="退出" Click="BtnExit_Click"/>
         </ContextMenu>
     </Window.ContextMenu>
-    <Grid MouseDown="Grid_MouseDown">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="300"/>
-        </Grid.RowDefinitions>
-        
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
-            <Label Content="Mic" Margin="0,0,10,0" Width="50"/>
-            <Label Content="LS" Width="50"/>
-        </StackPanel>
-        
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,5">
-            <local:MicrophoneControl x:Name="MicrophoneControl" Width="50" Height="300" Margin="0,0,10,0">
-                <local:MicrophoneControl.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="选择颜色..." Click="MicColorMenuItem_Click"/>
-                    </ContextMenu>
-                </local:MicrophoneControl.ContextMenu>
-            </local:MicrophoneControl>
-            <local:SpeakerControl x:Name="SpeakerControl" Width="50" Height="300">
-                <local:SpeakerControl.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="选择颜色..." Click="SpeakerColorMenuItem_Click"/>
-                    </ContextMenu>
-                </local:SpeakerControl.ContextMenu>
-            </local:SpeakerControl>
-        </StackPanel>
-    </Grid>
+    <Border Background="#FF1A1A1A" CornerRadius="10" BorderThickness="0">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="300"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+                <Label Content="Mic" Margin="0,0,10,0" Width="50"/>
+                <Label Content="LS" Width="50"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,5">
+                <local:MicrophoneControl x:Name="MicrophoneControl" Width="50" Height="300" Margin="0,0,10,0">
+                    <local:MicrophoneControl.ContextMenu>
+                        <ContextMenu Opened="ContextMenu_Opened">
+                            <MenuItem Header="选择颜色..." Click="MicColorMenuItem_Click"/>
+                            <Separator/>
+                            <MenuItem Header="不透明度">
+                                <MenuItem Header="10%" Click="OpacityMenuItem_Click" Tag="0.1" IsCheckable="True"/>
+                                <MenuItem Header="20%" Click="OpacityMenuItem_Click" Tag="0.2" IsCheckable="True"/>
+                                <MenuItem Header="30%" Click="OpacityMenuItem_Click" Tag="0.3" IsCheckable="True"/>
+                                <MenuItem Header="40%" Click="OpacityMenuItem_Click" Tag="0.4" IsCheckable="True"/>
+                                <MenuItem Header="50%" Click="OpacityMenuItem_Click" Tag="0.5" IsCheckable="True"/>
+                                <MenuItem Header="60%" Click="OpacityMenuItem_Click" Tag="0.6" IsCheckable="True"/>
+                                <MenuItem Header="70%" Click="OpacityMenuItem_Click" Tag="0.7" IsCheckable="True"/>
+                                <MenuItem Header="80%" Click="OpacityMenuItem_Click" Tag="0.8" IsCheckable="True"/>
+                                <MenuItem Header="90%" Click="OpacityMenuItem_Click" Tag="0.9" IsCheckable="True"/>
+                                <MenuItem Header="100%" Click="OpacityMenuItem_Click" Tag="1.0" IsCheckable="True"/>
+                            </MenuItem>
+                            <Separator/>
+                            <MenuItem Header="退出" Click="BtnExit_Click"/>
+                        </ContextMenu>
+                    </local:MicrophoneControl.ContextMenu>
+                </local:MicrophoneControl>
+                <local:SpeakerControl x:Name="SpeakerControl" Width="50" Height="300">
+                    <local:SpeakerControl.ContextMenu>
+                        <ContextMenu Opened="ContextMenu_Opened">
+                            <MenuItem Header="选择颜色..." Click="SpeakerColorMenuItem_Click"/>
+                            <Separator/>
+                            <MenuItem Header="不透明度">
+                                <MenuItem Header="10%" Click="OpacityMenuItem_Click" Tag="0.1" IsCheckable="True"/>
+                                <MenuItem Header="20%" Click="OpacityMenuItem_Click" Tag="0.2" IsCheckable="True"/>
+                                <MenuItem Header="30%" Click="OpacityMenuItem_Click" Tag="0.3" IsCheckable="True"/>
+                                <MenuItem Header="40%" Click="OpacityMenuItem_Click" Tag="0.4" IsCheckable="True"/>
+                                <MenuItem Header="50%" Click="OpacityMenuItem_Click" Tag="0.5" IsCheckable="True"/>
+                                <MenuItem Header="60%" Click="OpacityMenuItem_Click" Tag="0.6" IsCheckable="True"/>
+                                <MenuItem Header="70%" Click="OpacityMenuItem_Click" Tag="0.7" IsCheckable="True"/>
+                                <MenuItem Header="80%" Click="OpacityMenuItem_Click" Tag="0.8" IsCheckable="True"/>
+                                <MenuItem Header="90%" Click="OpacityMenuItem_Click" Tag="0.9" IsCheckable="True"/>
+                                <MenuItem Header="100%" Click="OpacityMenuItem_Click" Tag="1.0" IsCheckable="True"/>
+                            </MenuItem>
+                            <Separator/>
+                            <MenuItem Header="退出" Click="BtnExit_Click"/>
+                        </ContextMenu>
+                    </local:SpeakerControl.ContextMenu>
+                </local:SpeakerControl>
+            </StackPanel>
+        </Grid>
+    </Border>
 </Window>
 
