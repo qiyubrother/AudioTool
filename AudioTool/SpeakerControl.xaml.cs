@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -75,12 +76,67 @@ namespace AudioTool
         {
             try
             {
-                using (var defaultDevice = _enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia))
+                // 尝试多种方式获取音频数据，优先使用Console角色，因为它通常更准确
+                MMDevice device = null;
+                
+                // 首先尝试Console角色
+                try
                 {
-                    if (defaultDevice != null)
+                    device = _enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
+                }
+                catch
+                {
+                    // 如果失败，尝试Multimedia角色
+                    try
                     {
-                        _speakerValue = defaultDevice.AudioMeterInformation.MasterPeakValue * 100;
+                        device = _enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+                    }
+                    catch
+                    {
+                        // 最后尝试Communications角色
+                        try
+                        {
+                            device = _enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Communications);
+                        }
+                        catch { }
+                    }
+                }
+
+                if (device != null)
+                {
+                    try
+                    {
+                        var meterInfo = device.AudioMeterInformation;
+                        
+                        // 尝试获取MasterPeakValue，如果不可用则使用PeakValues的最大值
+                        float peakValue = 0;
+                        try
+                        {
+                            peakValue = meterInfo.MasterPeakValue;
+                        }
+                        catch
+                        {
+                            // 如果MasterPeakValue不可用，使用PeakValues数组的最大值
+                            if (meterInfo.PeakValues != null && meterInfo.PeakValues.Count > 0)
+                            {
+                                // 遍历所有通道找到最大值
+                                for (int i = 0; i < meterInfo.PeakValues.Count; i++)
+                                {
+                                    var channelValue = meterInfo.PeakValues[i];
+                                    if (channelValue > peakValue)
+                                    {
+                                        peakValue = channelValue;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        _speakerValue = peakValue * 100;
                         UpdateDisplay();
+                    }
+                    finally
+                    {
+                        device.Dispose();
                     }
                 }
             }
